@@ -63,6 +63,17 @@ public class DogController {
         return new ResponseEntity<>(updatedDog, HttpStatus.OK);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Dog> patchDog(@RequestBody Dog dog, @PathVariable UUID id) {
+        Dog updatedDog;
+        try {
+            updatedDog = dogService.patch(dog, id);
+        } catch (DogNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedDog, HttpStatus.OK);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Dog> deleteDogById(@PathVariable UUID id) {
         Dog dog;
