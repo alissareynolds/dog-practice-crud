@@ -56,7 +56,6 @@ public class DogController {
     }
 
 
-
     @PutMapping("/{id}")
     public ResponseEntity<Dog> updateDog(@RequestBody Dog dog, @PathVariable UUID id) {
         Dog updatedDog;
