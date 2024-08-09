@@ -15,13 +15,22 @@ import java.util.UUID;
 @RequestMapping("/api/dogs")
 public class DogController {
 
-    @Autowired
-    DogService dogService;
+    private final DogService dogService;
+
+    public DogController(DogService dogService) {
+        this.dogService = dogService;
+    }
 
     @PostMapping
     public ResponseEntity<Dog> createDog(@RequestBody Dog dog) {
         Dog newDog = dogService.create(dog);
         return new ResponseEntity<>(newDog, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Dog>> getAllDogs() {
+        List<Dog> dogs = dogService.findAllDogs();
+        return new ResponseEntity<>(dogs, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -46,11 +55,7 @@ public class DogController {
         return new ResponseEntity<>(newDog, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Dog>> getAllDogs() {
-        List<Dog> dogs = dogService.findAllDogs();
-        return new ResponseEntity<>(dogs, HttpStatus.OK);
-    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Dog> updateDog(@RequestBody Dog dog, @PathVariable UUID id) {

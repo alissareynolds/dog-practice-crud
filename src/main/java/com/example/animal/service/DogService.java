@@ -14,18 +14,25 @@ import java.util.UUID;
 @Service
 public class DogService {
 
-    @Autowired
-    DogRepository dogRepository;
+    private final DogRepository dogRepository;
+
+    public DogService(DogRepository dogRepository) {
+        this.dogRepository = dogRepository;
+    }
 
     public Dog create(Dog dog) {
         Dog newDog = new Dog(dog.getName(), dog.getGender(), dog.getColor(), dog.getAge());
         return dogRepository.save(newDog);
     }
 
+    public List<Dog> findAllDogs() {
+        return dogRepository.findAll();
+    }
+
     public Dog getById(UUID id) {
         Optional<Dog> dog = dogRepository.findById(id);
         if (dog.isEmpty()) {
-            throw new DogNotFoundException("A dog with that id was not found");
+            throw new DogNotFoundException("A dog with id: " + id + " was not found.");
         }
         return dog.get();
     }
@@ -33,19 +40,15 @@ public class DogService {
     public Dog getDogByName(String name) {
         Optional<Dog> dog = dogRepository.findByName(name);
         if (dog.isEmpty()) {
-            throw new DogNotFoundException("A dog with that name was not found");
+            throw new DogNotFoundException("A dog with name: " + name + " was not found.");
         }
         return dog.get();
-    }
-
-    public List<Dog> findAllDogs() {
-        return dogRepository.findAll();
     }
 
     public Dog updateDog(Dog dog, UUID id) {
         Optional<Dog> oldDog = dogRepository.findById(id);
         if (oldDog.isEmpty()) {
-            throw new DogNotFoundException("A dog with that id does not exist");
+            throw new DogNotFoundException("A dog with id: " + id + " was not found.");
         }
         Dog updatedDog = new Dog(id, dog.getName(), dog.getGender(), dog.getColor(), dog.getAge());
         return dogRepository.save(updatedDog);
@@ -75,7 +78,7 @@ public class DogService {
     public Dog deleteDogById(UUID id) {
         Optional<Dog> dog = dogRepository.findById(id);
         if(dog.isEmpty()) {
-            throw new DogNotFoundException("A dog with that id does not exist");
+            throw new DogNotFoundException("A dog with id: " + id + " was not found.");
         }
         dogRepository.delete(dog.get());
         return dog.get();
