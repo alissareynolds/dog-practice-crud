@@ -1,5 +1,6 @@
 package com.example.animal.controller;
 
+import com.example.animal.exceptions.DogNotFoundException;
 import com.example.animal.model.Dog;
 import com.example.animal.service.DogService;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +50,29 @@ class DogControllerTest {
         ResponseEntity<List<Dog>> response = dogController.getAllDogs();
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(dogs, response.getBody());
+    }
+
+    @Test
+    public void getDogById_shouldReturnDogAndOKHttpStatus() {
+        Mockito.when(mockDogService.getById(recordWithId.getId())).thenReturn(recordWithId);
+        ResponseEntity<Dog> response = dogController.getDogById(recordWithId.getId());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(recordWithId, response.getBody());
+    }
+
+    @Test
+    public void getDogsById_shouldReturn404WhenDogNotFound() {
+        Mockito.when(mockDogService.getById(id)).thenThrow(new DogNotFoundException("A dog with id: " + id + " was not found."));
+        ResponseEntity<Dog> response = dogController.getDogById(id);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void getDogByName_shouldReturnListOfDogsAndOKHttpStatus() {
+        Mockito.when(mockDogService.getDogByName(recordWithId.getName())).thenReturn(List.of(recordWithId));
+        ResponseEntity<List<Dog>> response = dogController.getDogByName(recordWithId.getName());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(List.of(recordWithId), response.getBody());
     }
 
 
