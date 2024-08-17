@@ -1,5 +1,6 @@
 package com.example.animal.service;
 
+import com.example.animal.exceptions.DogNotFoundException;
 import com.example.animal.model.Dog;
 import com.example.animal.repository.DogRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +44,20 @@ class DogServiceTest {
         Mockito.when(mockDogRepository.findAll()).thenReturn(dogs);
         List<Dog> response = dogService.findAllDogs();
         assertEquals(dogs, response);
+    }
+
+    @Test
+    public void getById_shouldReturnDog() {
+        Mockito.when(mockDogRepository.findById(recordWithId.getId())).thenReturn(Optional.of(recordWithId));
+        Dog response = dogService.getById(recordWithId.getId());
+        assertEquals(recordWithId, response);
+    }
+
+    @Test
+    public void getById_throwsExceptionWhenBookWasNotFound() {
+        Mockito.when(mockDogRepository.findById(id)).thenReturn(Optional.empty());
+        DogNotFoundException exception = assertThrows(DogNotFoundException.class, () -> dogService.getById(id));
+        assertEquals("A dog with id: " + id + " was not found.", exception.getMessage());
     }
 
 
