@@ -61,4 +61,12 @@ public class DogControllerIntegrationTest {
                 .get("/api/dogs/59c47568-fde0-4dd7-9aef-03db6a962810").accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
     }
+
+    @Test
+    public void getDogByName() throws Exception {
+        Mockito.when(mockDogService.getDogByName("Maggie")).thenReturn(List.of(new Dog()));
+        mvc.perform(MockMvcRequestBuilders
+                .get("/api/dogs/name/Maggie").accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+    }
 }
