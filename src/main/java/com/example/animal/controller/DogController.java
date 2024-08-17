@@ -3,7 +3,6 @@ package com.example.animal.controller;
 import com.example.animal.exceptions.DogNotFoundException;
 import com.example.animal.model.Dog;
 import com.example.animal.service.DogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,14 +44,9 @@ public class DogController {
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<Dog> getDogByName(@PathVariable String name) {
-        Dog newDog;
-        try {
-            newDog = dogService.getDogByName(name);
-        } catch (DogNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(newDog, HttpStatus.OK);
+    public ResponseEntity<List<Dog>> getDogByName(@PathVariable String name) {
+        List<Dog> dogs = dogService.getDogByName(name);
+        return new ResponseEntity<>(dogs, HttpStatus.OK);
     }
 
 
@@ -80,13 +74,8 @@ public class DogController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Dog> deleteDogById(@PathVariable UUID id) {
-        Dog dog;
-        try {
-            dog = dogService.deleteDogById(id);
-        } catch (DogNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(dog, HttpStatus.OK);
+        dogService.deleteDogById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

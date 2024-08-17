@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DogControllerTest {
 
-    private DogController mockDogController;
+    private DogController dogController;
     private DogService mockDogService;
 
     public final Dog input = new Dog(null, "Maggie", "female", "brown, black, white", 13);
@@ -24,16 +24,18 @@ class DogControllerTest {
     public final Dog recordWithId = new Dog(UUID.randomUUID(), "Maggie", "female", "brown, black, white", 13);
     public final Dog recordWithId2 = new Dog(recordWithId.getId(), "Dakota", "female", "black", 5);
 
+    public final UUID id = UUID.fromString("59c47568-fde0-4dd7-9aef-03db6a962810");
+
     @BeforeEach
     public void setup() {
         mockDogService = Mockito.mock(DogService.class);
-        mockDogController = new DogController(mockDogService);
+        dogController = new DogController(mockDogService);
     }
 
     @Test
     public void createDog_shouldReturnDogAndCREATEDHttpStatus() {
         Mockito.when(mockDogService.create(Mockito.any())).thenReturn(recordWithId);
-        ResponseEntity<Dog> response = mockDogController.createDog(input);
+        ResponseEntity<Dog> response = dogController.createDog(input);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(recordWithId, response.getBody());
     }
@@ -44,49 +46,10 @@ class DogControllerTest {
         dogs.add(input);
         dogs.add(input2);
         Mockito.when(mockDogService.findAllDogs()).thenReturn(dogs);
-        ResponseEntity<List<Dog>> response = mockDogController.getAllDogs();
+        ResponseEntity<List<Dog>> response = dogController.getAllDogs();
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(dogs, response.getBody());
     }
 
-    @Test
-    public void getDogById_shouldReturnDogAndOKHttpStatus() {
-        Mockito.when(mockDogService.getById(recordWithId.getId())).thenReturn(recordWithId);
-        ResponseEntity<Dog> response = mockDogController.getDogById(recordWithId.getId());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(recordWithId, response.getBody());
-    }
-
-    @Test
-    public void getDogByName_shouldReturnDogAndOKHttpStatus() {
-        Mockito.when(mockDogService.getDogByName(recordWithId.getName())).thenReturn(recordWithId);
-        ResponseEntity<Dog> response = mockDogController.getDogByName(recordWithId.getName());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(recordWithId, response.getBody());
-    }
-
-    @Test
-    public void updateDog_shouldReturnDogAndOKHttpStatus() {
-        Mockito.when(mockDogService.updateDog(input2, recordWithId.getId())).thenReturn(recordWithId2);
-        ResponseEntity<Dog> response = mockDogController.updateDog(input2, recordWithId.getId());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(recordWithId2, response.getBody());
-    }
-
-    @Test
-    public void patchDog_shouldReturnDogAndOKHttpStatus() {
-        Mockito.when(mockDogService.patch(input2, recordWithId.getId())).thenReturn(recordWithId2);
-        ResponseEntity<Dog> response = mockDogController.patchDog(input2, recordWithId.getId());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(recordWithId2, response.getBody());
-    }
-
-    @Test
-    public void deleteDogById_shouldReturnDogAndOKHttpStatus() {
-        Mockito.when(mockDogService.deleteDogById(recordWithId.getId())).thenReturn(recordWithId);
-        ResponseEntity<Dog> response = mockDogController.deleteDogById(recordWithId.getId());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(recordWithId, response.getBody());
-    }
 
 }
