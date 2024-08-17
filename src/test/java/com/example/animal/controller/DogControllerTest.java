@@ -85,9 +85,23 @@ class DogControllerTest {
 
     @Test
     public void updateDog_shouldReturn404WhenDogNotFound() {
-        Mockito.when(mockDogService.updateDog(input2, id)).thenThrow(new DogNotFoundException("A dog with id: " + id + " was not found."));
-        ResponseEntity<Dog> response = dogController.updateDog(input2, id);
+        Mockito.when(mockDogService.updateDog(input, id)).thenThrow(new DogNotFoundException("A dog with id: " + id + " was not found."));
+        ResponseEntity<Dog> response = dogController.updateDog(input, id);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
+    @Test
+    public void patchDog_shouldReturnDogAndOKHttpStatus() {
+        Mockito.when(mockDogService.patch(input2, recordWithId.getId())).thenReturn(recordWithId2);
+        ResponseEntity<Dog> response = dogController.patchDog(input2, recordWithId.getId());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(recordWithId2, response.getBody());
+    }
+
+    @Test
+    public void patchDog_shouldReturn404WhenBookNotFound() {
+        Mockito.when(mockDogService.patch(input, id)).thenThrow(new DogNotFoundException("A dog with id: " + id + " was not found."));
+        ResponseEntity<Dog> response = dogController.patchDog(input, id);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
 }
