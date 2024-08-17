@@ -91,4 +91,15 @@ public class DogControllerIntegrationTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void deleteDogById() throws Exception {
+        Mockito.when(mockDogService.getById(UUID.fromString("59c47568-fde0-4dd7-9aef-03db6a962810"))).thenReturn(dog);
+        mvc.perform( MockMvcRequestBuilders
+                        .delete("/api/dogs/delete/59c47568-fde0-4dd7-9aef-03db6a962810")
+                        .content(asJsonString(dog))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }
