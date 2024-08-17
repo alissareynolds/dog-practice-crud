@@ -75,5 +75,19 @@ class DogControllerTest {
         assertEquals(List.of(recordWithId), response.getBody());
     }
 
+    @Test
+    public void updateDog_shouldReturnDogAndOKHttpStatus() {
+        Mockito.when(mockDogService.updateDog(input2, recordWithId.getId())).thenReturn(recordWithId2);
+        ResponseEntity<Dog> response = dogController.updateDog(input2, recordWithId.getId());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(recordWithId2, response.getBody());
+    }
+
+    @Test
+    public void updateDog_shouldReturn404WhenDogNotFound() {
+        Mockito.when(mockDogService.updateDog(input2, id)).thenThrow(new DogNotFoundException("A dog with id: " + id + " was not found."));
+        ResponseEntity<Dog> response = dogController.updateDog(input2, id);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
 
 }
