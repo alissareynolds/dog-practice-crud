@@ -44,4 +44,11 @@ public class DogControllerIntegrationTest {
             throw new RuntimeException(e);
         }
     }
+
+    @Test
+    public void getAllDogs() throws Exception {
+        mvc.perform(MockMvcRequestBuilders
+                .get("/api/dogs").accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+    }
 }
