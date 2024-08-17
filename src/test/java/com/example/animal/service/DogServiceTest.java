@@ -60,5 +60,12 @@ class DogServiceTest {
         assertEquals("A dog with id: " + id + " was not found.", exception.getMessage());
     }
 
+    @Test
+    public void getDogByName_shouldReturnListOfDogs() {
+        Mockito.when(mockDogRepository.findByName(recordWithId.getName())).thenReturn(List.of(recordWithId));
+        List<Dog> response = dogService.getDogByName(recordWithId.getName());
+        assertEquals(List.of(recordWithId), response);
+    }
+
 
 }
