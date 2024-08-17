@@ -104,4 +104,10 @@ class DogControllerTest {
         ResponseEntity<Dog> response = dogController.patchDog(input, id);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
+
+    @Test
+    public void deleteDogById_shouldReturnOKHttpStatus() {
+        ResponseEntity<Dog> response = dogController.deleteDogById(recordWithId.getId());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 }
