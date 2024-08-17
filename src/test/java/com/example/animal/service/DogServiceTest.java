@@ -67,5 +67,20 @@ class DogServiceTest {
         assertEquals(List.of(recordWithId), response);
     }
 
+    @Test
+    public void updateDog_shouldReturnUpdatedDog() {
+        Mockito.when(mockDogRepository.findById(recordWithId.getId())).thenReturn(Optional.of(recordWithId));
+        Mockito.when(mockDogRepository.save(Mockito.any())).thenReturn(recordWithId);
+        Dog response = dogService.updateDog(input2, recordWithId.getId());
+        assertEquals(recordWithId, response);
+    }
+
+    @Test
+    public void updateDog_throwsExceptionWhenDogWasNotFound() {
+        Mockito.when(mockDogRepository.findById(id)).thenReturn(Optional.empty());
+        DogNotFoundException exception = assertThrows(DogNotFoundException.class, () -> dogService.updateDog(input, id));
+        assertEquals("A dog with id: " + id + " was not found.", exception.getMessage());
+    }
+
 
 }
