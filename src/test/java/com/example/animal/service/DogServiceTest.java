@@ -82,5 +82,74 @@ class DogServiceTest {
         assertEquals("A dog with id: " + id + " was not found.", exception.getMessage());
     }
 
+    @Test
+    public void patchDog_throwsExceptionWhenDogWasNotFound() {
+        Mockito.when(mockDogRepository.findById(id)).thenReturn(Optional.empty());
+        DogNotFoundException exception = assertThrows(DogNotFoundException.class, () -> dogService.patch(input, id));
+        assertEquals("A dog with id: " + id + " was not found.", exception.getMessage());
+    }
+
+    @Test
+    public void patchDog_shouldReturnUpdatedName() {
+        Dog input = new Dog();
+        input.setName("Dakota");
+        Mockito.when(mockDogRepository.findById(recordWithId.getId())).thenReturn(Optional.of(recordWithId));
+        Mockito.when(mockDogRepository.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);
+        Dog response = dogService.patch(input, recordWithId.getId());
+        assertEquals(recordWithId.getId(), response.getId());
+        assertEquals("Dakota", response.getName());
+        assertEquals("female", response.getGender());
+        assertEquals("brown, black, white", response.getColor());
+        assertEquals(13, response.getAge());
+    }
+
+    @Test
+    public void patchDog_shouldReturnUpdatedGender() {
+        Dog input = new Dog();
+        input.setGender("male");
+        Mockito.when(mockDogRepository.findById(recordWithId.getId())).thenReturn(Optional.of(recordWithId));
+        Mockito.when(mockDogRepository.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);
+        Dog response = dogService.patch(input, recordWithId.getId());
+        assertEquals(recordWithId.getId(), response.getId());
+        assertEquals("Maggie", response.getName());
+        assertEquals("male", response.getGender());
+        assertEquals("brown, black, white", response.getColor());
+        assertEquals(13, response.getAge());
+    }
+
+    @Test
+    public void patchDog_shouldReturnUpdatedColor() {
+        Dog input = new Dog();
+        input.setColor("brown");
+        Mockito.when(mockDogRepository.findById(recordWithId.getId())).thenReturn(Optional.of(recordWithId));
+        Mockito.when(mockDogRepository.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);
+        Dog response = dogService.patch(input, recordWithId.getId());
+        assertEquals(recordWithId.getId(), response.getId());
+        assertEquals("Maggie", response.getName());
+        assertEquals("female", response.getGender());
+        assertEquals("brown", response.getColor());
+        assertEquals(13, response.getAge());
+    }
+
+    @Test
+    public void patchDog_shouldReturnUpdatedAge() {
+        Dog input = new Dog();
+        input.setAge(14);
+        Mockito.when(mockDogRepository.findById(recordWithId.getId())).thenReturn(Optional.of(recordWithId));
+        Mockito.when(mockDogRepository.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);
+        Dog response = dogService.patch(input, recordWithId.getId());
+        assertEquals(recordWithId.getId(), response.getId());
+        assertEquals("Maggie", response.getName());
+        assertEquals("female", response.getGender());
+        assertEquals("brown, black, white", response.getColor());
+        assertEquals(14, response.getAge());
+    }
+
+    @Test
+    public void deleteDogById_callsRepositoryDeleteMethod() {
+        dogService.deleteDogById(id);
+        Mockito.verify(mockDogRepository).deleteById(id);
+    }
+
 
 }
